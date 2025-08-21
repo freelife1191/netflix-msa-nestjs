@@ -1,10 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MovieModule } from './movie/movie.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService], // 인스턴스화 해서 컨트롤러에 주입
+  imports: [MovieModule],
 })
 export class AppModule {}
