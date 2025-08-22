@@ -2,13 +2,16 @@
 
 코드팩토리의 백엔드 아카데미: 한 번에 끝내는 NestJS 패키지 - 기초부터 MSA까지
 
-## Project setup
+
+## Command
+
+### Project setup
 
 ```bash
 $ pnpm install
 ```
 
-## Compile and run the project
+### Compile and run the project
 
 ```bash
 # development
@@ -21,7 +24,7 @@ $ pnpm run start:dev
 $ pnpm run start:prod
 ```
 
-## Run tests
+### Run tests
 
 ```bash
 # lint
@@ -43,7 +46,7 @@ $ pnpm run test:cov
 $ pnpm run test:debug
 ```
 
-## Etc
+### Etc
 
 ```bash
 # prettier format fix
@@ -52,3 +55,7 @@ $ pnpm format
 # eslint fix
 $ pnpm run lint
 ```
+
+## Study Documents
+
+- [Class 01](./docs/Class%2001.md)
