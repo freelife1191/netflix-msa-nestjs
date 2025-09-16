@@ -328,3 +328,228 @@ UPDATE src/app.module.ts (1915 bytes)
   "genreIds": [3]
 }
 ```
+
+---
+
+## Ch 3. QueryBuilder
+
+### 1. SELECT
+
+```ts
+const movie = await dataSource
+  .createQueryBuilder()
+  .select('movie')
+  .from(Movie, 'movie')
+  .leftJoinAndSelect('movie.detail', 'detail')
+  .leftJoinAndSelect('movie.director', 'director')
+  .leftJoinAndSelect('movie.genres', 'genres')
+  .where('movie.id = :id', { id: 1 })
+  .getOne();
+```
+
+### 2. INSERT
+
+```ts
+await dataSource
+  .createQueryBuilder()
+  .insert()
+  .into(Movie)
+  .values([
+    {
+      title: 'New Movie',
+      genre: 'Action',
+      director: director,
+      genres: genres,
+    },
+  ])
+  .execute();
+```
+
+### 3. UPDATE
+
+```ts
+await dataSource
+  .createQueryBuilder()
+  .update(Movie)
+  .set({ title: 'Updated Title', genre: 'Drama' })
+  .where('id = :id', { id: 1 })
+  .execute();
+```
+
+### 4. DELETE
+
+```ts
+await dataSource
+  .createQueryBuilder()
+  .delete()
+  .from(Movie)
+  .where('id = :id', { id: 1 })
+  .execute();
+```
+
+### 5. RELATIONS
+
+```ts
+const genres = await dataSource
+  .createQueryBuilder()
+  .relation(Movie, 'genres')
+  .of(1) // Movie id
+  .loadMany();
+```
+
+### `getOne()`, `getMany()`, `select()`
+
+```ts
+// 단일 Row만 가져올때
+const users = await connection
+  .getRepository(User)
+  .createQueryBuilder('user')
+  .select(['user.id', 'user.firstName', 'user.lastName'])
+  .getOne();
+
+// 복수 Row 가져올때
+const users = await connection
+  .getRepository(User)
+  .createQueryBuilder('user')
+  .select(['user.id', 'user.firstName', 'user.lastName'])
+  .getMany();
+```
+
+### `where()`
+
+```ts
+// 하나의 필터링 조건 적용
+const users = await connection
+  .getRepository(User)
+  .createQueryBuilder('user')
+  .where('user.isActive = :isActive', { isActive: true })
+  .getMany();
+
+// 다수의 필터링 조건 적용
+const users = await connection
+  .getRepository(User)
+  .createQueryBuilder('user')
+  .where('user.firstName = :firstName', { firstName: 'John' })
+  .andWhere('user.lastName = :lastName', { lastName: 'Doe' })
+  .getMany();
+```
+
+### `orderBy()`
+
+```ts
+const users = await connection
+  .getRepository(User)
+  .createQueryBuilder('user')
+  .orderBy('user.lastName', 'ASC')
+  .addOrderBy('user.firstName', 'DESC')
+  .getMany();
+```
+
+### `skip()`, `take()`
+
+```ts
+const users = await connection
+  .getRepository(User)
+  .createQueryBuilder('user')
+  .skip(10)
+  .take(5)
+  .getMany();
+```
+
+### `join()`
+
+```ts
+// Inner Join
+const users = await connection
+  .getRepository(User)
+  .createQueryBuilder('user')
+  .innerJoinAndSelect('user.profile', 'profile')
+  .getMany();
+
+// Left Join
+const users = await connection
+  .getRepository(User)
+  .createQueryBuilder('user')
+  .leftJoinAndSelect('user.photos', 'photo')
+  .getMany();
+```
+
+### Aggregation
+
+```ts
+const userCount = await connection
+  .getRepository(User)
+  .createQueryBuilder('user')
+  .select('COUNT(user.id)', 'count')
+  .getRawOne();
+```
+
+### Subquery
+
+```ts
+const users = await connection
+  .getRepository(User)
+  .createQueryBuilder('user')
+  .where(qb => {
+    const subQuery = qb
+      .subQuery()
+      .select('subUser.id')
+      .from(User, 'subUser')
+      .where('subUser.isActive = :isActive', { isActive: true })
+      .getQuery();
+    return 'user.id IN ' + subQuery;
+  })
+  .setParameter('isActive', true)
+  .getMany();
+```
+
+### Raw Query
+
+```ts
+const users = await connection
+  .getRepository(User)
+  .createQueryBuilder()
+  .select('user')
+  .from(User, 'user')
+  .where('user.isActive = :isActive', { isActive: true })
+  .getRawMany();
+```
+
+### 영화 추가
+
+```json
+{
+  "title": "인셉션",
+  "detail": "레오나르도 디카프리오 나온 영화",
+  "directorId": 1,
+  "genreIds": [2, 3]
+}
+```
+
+```json
+{
+  "title": "다크나이트: 라이즈",
+  "detail": "다크나이트 2",
+  "directorId": 1,
+  "genreIds": [2, 3]
+}
+```
+
+### 감독 추가
+
+```json
+{
+  "name": "Quentin Tarantino",
+  "dob": "1963-05-27T00:00:00.000Z",
+  "nationality": "USA"
+}
+```
+
+### 영화 수정
+
+```json
+{
+  "genreIds": [3],
+  "directorId": 2
+}
+```
