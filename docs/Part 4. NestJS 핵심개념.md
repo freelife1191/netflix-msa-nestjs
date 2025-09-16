@@ -8,6 +8,12 @@
 nest new netflix
 ```
 
+prettier 설치
+
+```bash
+pnpm install -D prettier eslint-config-prettier eslint-plugin-prettier prettier-plugin-tailwindcss
+```
+
 ## Ch 4. 모듈
 
 ```bash

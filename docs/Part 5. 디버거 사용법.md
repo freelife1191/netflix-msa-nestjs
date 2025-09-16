@@ -10,25 +10,25 @@ Debugger 세팅
 
 ```json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Debug Nest Framework",
-            "runtimeExecutable": "pnpm",
-            "runtimeArgs": [
-                "run",
-                "start:debug",
-                "--",
-                "--inspect-brk"
-            ],
-            "autoAttachChildProcesses": true,
-            "restart": true,
-            "sourceMaps": true,
-            "stopOnEntry": false,
-            "console": "integratedTerminal"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Nest Framework",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+          "run",
+          "start:debug",
+          "--",
+          "--inspect-brk"
+      ],
+      "autoAttachChildProcesses": true,
+      "restart": true,
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "console": "integratedTerminal"
+    }
+  ]
 }
 ```

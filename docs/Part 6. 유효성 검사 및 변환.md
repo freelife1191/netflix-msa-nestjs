@@ -75,40 +75,39 @@
 }
 ```
 
-
 ### Class Validator 프로젝트에 적용하기
 
 ```bash
-$ pnpm install class-validator class-transformer
+pnpm install class-validator class-transformer
 ```
 
 ```js
 class PasswordValidator implements ValidatorConstraintInterface {
-    validate(value: any, validationArguments?: ValidationArguments): Promise<boolean> | boolean {
-        /// 비밀번호 길이는 4-8
-        return value.length > 4 && value.length < 8;
-    }
-    defaultMessage(validationArguments?: ValidationArguments): string {
-        return '비밀번호 길이는 4-8자 이어야 합니다. 입력된 비밀번호: ($value)';
-    }
+  validate(value: any, validationArguments?: ValidationArguments): Promise<boolean> | boolean {
+    /// 비밀번호 길이는 4-8
+    return value.length > 4 && value.length < 8;
+  }
+  defaultMessage(validationArguments?: ValidationArguments): string {
+    return '비밀번호 길이는 4-8자 이어야 합니다. 입력된 비밀번호: ($value)';
+  }
 }
 
 function IsPasswordValid(validationOptions?: ValidationOptions) {
-    return function (object: Object, propertyName: string) {
-        registerDecorator({
-            target: object.constructor,
-            propertyName,
-            options: validationOptions,
-            validator: PasswordValidator,
-        })
-    }
+  return function (object: Object, propertyName: string) {
+    registerDecorator({
+      target: object.constructor,
+      propertyName,
+      options: validationOptions,
+      validator: PasswordValidator,
+    })
+  }
 }
 
 export class UpdateMovieDto {
-    @IsPasswordValid({
-        message: '비밀번호 길이는 4-8자 이어야 합니다.',
-    })
-    password?: string;
+  @IsPasswordValid({
+      message: '비밀번호 길이는 4-8자 이어야 합니다.',
+  })
+  password?: string;
 }
 ```
 
@@ -123,14 +122,14 @@ export class MovieController {
 ```js
 @Exclude() // 응답 데이터에 제외
 export class Movie {
-    @Expose() // 응답 데이터에 포함
-    id: number;
+  @Expose() // 응답 데이터에 포함
+  id: number;
 
-    @Expose() // 응답 데이터에 포함
-    title: string;
+  @Expose() // 응답 데이터에 포함
+  title: string;
 
-    @Expose() // 응답 데이터에 포함
-    genre: string;
+  @Expose() // 응답 데이터에 포함
+  genre: string;
 }
 ```
 
@@ -138,12 +137,12 @@ export class Movie {
 
 ```js
 export class Movie {
-    id: number;
-    title: string;
-    @Transform(
-        ({ value }) => value.toUpperCase()
-    )
-    genre: string;
+  id: number;
+  title: string;
+  @Transform(
+      ({ value }) => value.toUpperCase()
+  )
+  genre: string;
 }
 ```
 

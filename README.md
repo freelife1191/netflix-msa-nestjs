@@ -56,6 +56,25 @@ $ pnpm format
 $ pnpm run lint
 ```
 
+### Docker Compose PostgreSQL
+
+- postgreSQL
+  - port: 5423
+  - user: postgres
+  - password: postgres
+  - db: postgres
+- pgadmin
+  - port: 5550
+  - email: example@pgadmin.com
+  - password: pgadmin
+
+```bash
+# podman
+$ podman compose up --build
+# docker
+$ docker compose up --build
+```
+
 ## Study Documents
 
 - [Class 01](./docs/Class%2001.md)

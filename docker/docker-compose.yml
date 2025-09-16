@@ -1,0 +1,61 @@
+# https://growupcoding.tistory.com/99
+# https://note-ing.tistory.com/18
+# podman 에서는 IP로만 접속됨 podman dashboard inspect 에서 확인 
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16
+    # no : 재시작 하지 않음.
+    # always : exit code와 상관없이 항상 재시작.
+    # on-failure : exit code가 0일 아닐때만 재시작
+    # unless-stopped : 컨테이너 상태를 수동으로 stop 하기전까지 재시작.
+    restart: on-failure
+    volumes:
+     - pgdata:/var/lib/postgresql/data:z
+    #- type: bind
+    #  source: /Users/freelife/docker/postgres/data
+    #  target: /var/lib/postgresql/data
+    ports:
+      - "5432:5432" # pgadmin 에서 10.89.0.11:5432로 접속됨 localhost, 127.0.0.1로는 접속이 안됨
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      LISTEN_ADDRESSES: '*'
+      PGDATA: /var/lib/postgresql/data/pgdata
+      TZ: Asia/Seoul
+    privileged: true
+    # user: ${UID}
+    # user: '501'
+    networks:
+      - pgnet
+  pgadmin: # pgadmin 에서 postgres 접속 시 postgres:5432 로 접속설정 해야됨
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    ports:
+      - "5550:80"
+    volumes:
+     - ./pgadmin:/var/lib/pgadmin:z
+    environment:
+      PGADMIN_DEFAULT_EMAIL: example@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin
+      TZ: Asia/Seoul
+    depends_on:
+      - postgres
+    networks:
+      - pgnet
+
+volumes:
+  pgdata:
+# volumes:
+#   data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: $PWD/data
+
+networks:
+  pgnet:
+    driver: bridge
