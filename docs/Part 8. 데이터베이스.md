@@ -553,3 +553,10 @@ const users = await connection
   "directorId": 2
 }
 ```
+
+---
+
+## Ch 4. Transaction
+
+- `Lost Reads`
+  - 두 트랜잭션이 같은 데

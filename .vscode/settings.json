@@ -2,7 +2,11 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   // 파일 저장 시 모든 가능한 문제를 자동으로 수정하는 설정
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+    // 파일 저장 시 모든 가능한 문제를 자동으로 수정하는 설정
+    // explicit: 모든 가능한 문제를 자동으로 수정하는 설정
+    // never: 모든 가능한 문제를 자동으로 수정하지 않는 설정
+    "source.fixAll": "never",
+    "source.organizeImports": "explicit" // import 정리만 비활성화
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
