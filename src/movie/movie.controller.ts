@@ -1,19 +1,21 @@
 import {
-  Controller,
-  Get,
-  Post,
+  BadRequestException,
   Body,
-  Patch,
-  Param,
+  ClassSerializerInterceptor,
+  Controller,
   Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
   Query,
   UseInterceptors,
-  ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { MovieService } from './movie.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
-import { Movie } from './entity/movie.entity';
+import { MovieService } from './movie.service';
+import { MovieTitleValidationPipe } from './pipe/movie-title-validation.pipe';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 응답 데이터를 변환하는 인터셉터
@@ -21,12 +23,22 @@ export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
   @Get()
-  getMovies(@Query('title') title?: string) {
+  getMovies(@Query('title', MovieTitleValidationPipe) title?: string) {
     return this.movieService.findAll(title);
   }
 
   @Get(':id')
-  getMovie(@Param('id') id: string) {
+  getMovie(
+    @Param(
+      'id',
+      new ParseIntPipe({
+        exceptionFactory(error) {
+          throw new BadRequestException('숫자를 입력해주세요!');
+        },
+      })
+    )
+    id: string
+  ) {
     return this.movieService.findOne(+id);
   }
 
@@ -36,12 +48,15 @@ export class MovieController {
   }
 
   @Patch(':id')
-  patchMovie(@Param('id') id: string, @Body() body: UpdateMovieDto) {
+  patchMovie(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() body: UpdateMovieDto
+  ) {
     return this.movieService.update(+id, body);
   }
 
   @Delete(':id')
-  deleteMovie(@Param('id') id: string) {
+  deleteMovie(@Param('id', ParseIntPipe) id: string) {
     return this.movieService.deleteMovie(+id);
   }
 }

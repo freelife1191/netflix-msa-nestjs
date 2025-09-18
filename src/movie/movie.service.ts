@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Director } from 'src/director/entity/director.entity';
 import { Genre } from 'src/genre/entity/genre.entity';
-import { DataSource, In, Like, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieDetail } from './entity/movie-detail.entity';
@@ -33,6 +33,7 @@ export class MovieService {
     if (title) {
       qb.where('movie.title LIKE :title', { title: `%${title}%` });
     }
+    return await qb.getManyAndCount();
     /// 나중에 title 필터 기능 추가하기
     // if (!title) {
     //   return [
@@ -42,12 +43,12 @@ export class MovieService {
     //     await this.movieRepository.count(),
     //   ];
     // }
-    return await this.movieRepository.findAndCount({
-      where: {
-        title: Like(`%${title}%`),
-      },
-      relations: ['director', 'genres'], // 감독 정보도 함께 조회
-    });
+    // return await this.movieRepository.findAndCount({
+    //   where: {
+    //     title: Like(`%${title}%`),
+    //   },
+    //   relations: ['director', 'genres'], // 감독 정보도 함께 조회
+    // });
   }
 
   async findOne(id: number) {

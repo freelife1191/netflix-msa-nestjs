@@ -2,6 +2,8 @@
 
 ---
 
+https://codefactory.notion.site/NestJS-1dcb4f618d24460b84021c6fff59473b
+
 ## Ch 2. 컨트롤러
 
 ```bash

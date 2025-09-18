@@ -2,6 +2,8 @@
 
 ---
 
+https://codefactory.notion.site/bec252e1ac1d4ee89b45dcaa818232af
+
 ## Ch 2. TypeORM 기본기
 
 ### 02. Database 정의하고 환경변수 사용해보기
@@ -614,6 +616,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class CreateMovieAndDirectorTables1634567890123
   implements MigrationInterface
 {
+  // up은 마이그레이션 진행할 때
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             CREATE TABLE "director" (
@@ -636,6 +639,7 @@ export class CreateMovieAndDirectorTables1634567890123
         `);
   }
 
+  // down은 마이그레이션 롤백할 때
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`DROP TABLE "movie"`);
     await queryRunner.query(`DROP TABLE "director"`);

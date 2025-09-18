@@ -2,6 +2,8 @@
 
 ---
 
+https://codefactory.notion.site/c3469ed438b94dbe88e7be05e6838957
+
 ## Ch 1. Class Validator 인트로
 
 ### 기본 제공 Class Validator
