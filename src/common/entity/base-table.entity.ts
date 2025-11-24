@@ -1,4 +1,4 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 import { CreateDateColumn, UpdateDateColumn, VersionColumn } from 'typeorm';
 
 export class BaseTable {
@@ -8,7 +8,7 @@ export class BaseTable {
 
   @UpdateDateColumn()
   @Exclude() // 응답 데이터에 제외
-  @Expose() // 응답 데이터에 포함
+  // @Expose() // 응답 데이터에 포함
   updatedAt: Date;
 
   @VersionColumn()

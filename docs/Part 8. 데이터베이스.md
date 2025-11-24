@@ -179,7 +179,7 @@ CREATE src/director/director.service.spec.ts (474 bytes)
 CREATE src/director/director.service.ts (663 bytes)
 CREATE src/director/dto/create-director.dto.ts (34 bytes)
 CREATE src/director/dto/update-director.dto.ts (185 bytes)
-CREATE src/director/entities/director.entity.ts (25 bytes)
+CREATE src/director/entity/director.entity.ts (25 bytes)
 UPDATE src/app.module.ts (2158 bytes)
 ```
 
@@ -278,7 +278,7 @@ CREATE src/genre/genre.service.spec.ts (453 bytes)
 CREATE src/genre/genre.service.ts (621 bytes)
 CREATE src/genre/dto/create-genre.dto.ts (31 bytes)
 CREATE src/genre/dto/update-genre.dto.ts (173 bytes)
-CREATE src/genre/entities/genre.entity.ts (22 bytes)
+CREATE src/genre/entity/genre.entity.ts (22 bytes)
 UPDATE src/app.module.ts (1915 bytes)
 ```
 
