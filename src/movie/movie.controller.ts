@@ -10,18 +10,22 @@ import {
   Patch,
   Post,
   Query,
+  // UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieService } from './movie.service';
 import { MovieTitleValidationPipe } from './pipe/movie-title-validation.pipe';
+import { Public } from '../auth/decorator/public.decorator';
+// import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 응답 데이터를 변환하는 인터셉터
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
+  @Public()
   @Get()
   getMovies(@Query('title', MovieTitleValidationPipe) title?: string) {
     return this.movieService.findAll(title);
@@ -43,6 +47,7 @@ export class MovieController {
   }
 
   @Post()
+  // @UseGuards(AuthGuard)
   postMovie(@Body() body: CreateMovieDto) {
     return this.movieService.create(body);
   }
