@@ -7,6 +7,8 @@ import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieDetail } from './entity/movie-detail.entity';
 import { Movie } from './entity/movie.entity';
+import { CommonService } from '../common/common.service';
+import { GetMoviesDto } from './dto/get-movies.dto';
 
 @Injectable()
 export class MovieService {
@@ -22,10 +24,12 @@ export class MovieService {
     private readonly directorRepository: Repository<Director>,
     @InjectRepository(Genre)
     private readonly genreRepository: Repository<Genre>,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
+    private readonly commonService: CommonService
   ) {}
 
-  async findAll(title?: string) {
+  async findAll(dto: GetMoviesDto) {
+    const { title, take, page } = dto;
     const qb = await this.movieRepository
       .createQueryBuilder('movie')
       .leftJoinAndSelect('movie.director', 'director')
@@ -33,22 +37,10 @@ export class MovieService {
     if (title) {
       qb.where('movie.title LIKE :title', { title: `%${title}%` });
     }
+    if (take && page) {
+      this.commonService.applyPagePaginationParamsToQb(qb, dto);
+    }
     return await qb.getManyAndCount();
-    /// 나중에 title 필터 기능 추가하기
-    // if (!title) {
-    //   return [
-    //     await this.movieRepository.find({
-    //       relations: ['director', 'genres'], // 감독 정보도 함께 조회
-    //     }),
-    //     await this.movieRepository.count(),
-    //   ];
-    // }
-    // return await this.movieRepository.findAndCount({
-    //   where: {
-    //     title: Like(`%${title}%`),
-    //   },
-    //   relations: ['director', 'genres'], // 감독 정보도 함께 조회
-    // });
   }
 
   async findOne(id: number) {
@@ -290,11 +282,7 @@ export class MovieService {
       throw new NotFoundException('존재하지 않는 ID의 영화입니다!');
     }
 
-    await this.movieRepository
-      .createQueryBuilder()
-      .delete()
-      .where('id = :id', { id })
-      .execute();
+    await this.movieRepository.createQueryBuilder().delete().where('id = :id', { id }).execute();
     // await this.movieRepository.delete(id);
     await this.movieDetailRepository.delete(movie.detail.id);
 

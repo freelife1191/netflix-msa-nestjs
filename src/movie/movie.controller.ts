@@ -16,11 +16,11 @@ import {
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieService } from './movie.service';
-import { MovieTitleValidationPipe } from './pipe/movie-title-validation.pipe';
 import { Public } from '../auth/decorator/public.decorator';
 // import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { RBAC } from 'src/auth/decorator/rbac.decorator';
 import { Role } from 'src/user/entity/user.entity';
+import { GetMoviesDto } from './dto/get-movies.dto';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 응답 데이터를 변환하는 인터셉터
@@ -29,8 +29,9 @@ export class MovieController {
 
   @Get()
   @Public()
-  getMovies(@Query('title', MovieTitleValidationPipe) title?: string) {
-    return this.movieService.findAll(title);
+  getMovies(@Query() dto: GetMoviesDto) {
+    /// title 쿼리의 타입이 string 타입인지?
+    return this.movieService.findAll(dto);
   }
 
   @Get(':id')
