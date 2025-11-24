@@ -29,7 +29,7 @@ export class MovieService {
   ) {}
 
   async findAll(dto: GetMoviesDto) {
-    const { title, take, page } = dto;
+    const { title } = dto;
     const qb = await this.movieRepository
       .createQueryBuilder('movie')
       .leftJoinAndSelect('movie.director', 'director')
@@ -37,10 +37,17 @@ export class MovieService {
     if (title) {
       qb.where('movie.title LIKE :title', { title: `%${title}%` });
     }
-    if (take && page) {
-      this.commonService.applyPagePaginationParamsToQb(qb, dto);
-    }
-    return await qb.getManyAndCount();
+
+    // this.commonService.applyPagePaginationParamsToQb(qb, dto);
+    const { nextCursor } = await this.commonService.applyCursorPaginationParamsToQb(qb, dto);
+
+    const [data, count] = await qb.getManyAndCount();
+
+    return {
+      data,
+      nextCursor,
+      count,
+    };
   }
 
   async findOne(id: number) {
