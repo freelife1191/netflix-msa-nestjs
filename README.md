@@ -1,6 +1,6 @@
-# Netflix MSA NestJS
+# Netflix NestJS
 
-코드팩토리의 백엔드 아카데미: 한 번에 끝내는 NestJS 패키지 - 기초부터 MSA까지
+NestJS Netflix Toy Project
 
 
 ## Command

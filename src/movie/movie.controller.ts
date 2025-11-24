@@ -48,10 +48,7 @@ export class MovieController {
   }
 
   @Patch(':id')
-  patchMovie(
-    @Param('id', ParseIntPipe) id: string,
-    @Body() body: UpdateMovieDto
-  ) {
+  patchMovie(@Param('id', ParseIntPipe) id: string, @Body() body: UpdateMovieDto) {
     return this.movieService.update(+id, body);
   }
 
