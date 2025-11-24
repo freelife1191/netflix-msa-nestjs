@@ -19,19 +19,22 @@ import { MovieService } from './movie.service';
 import { MovieTitleValidationPipe } from './pipe/movie-title-validation.pipe';
 import { Public } from '../auth/decorator/public.decorator';
 // import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { RBAC } from 'src/auth/decorator/rbac.decorator';
+import { Role } from 'src/user/entity/user.entity';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 응답 데이터를 변환하는 인터셉터
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
-  @Public()
   @Get()
+  @Public()
   getMovies(@Query('title', MovieTitleValidationPipe) title?: string) {
     return this.movieService.findAll(title);
   }
 
   @Get(':id')
+  @Public()
   getMovie(
     @Param(
       'id',
@@ -47,17 +50,20 @@ export class MovieController {
   }
 
   @Post()
+  @RBAC(Role.admin)
   // @UseGuards(AuthGuard)
   postMovie(@Body() body: CreateMovieDto) {
     return this.movieService.create(body);
   }
 
   @Patch(':id')
+  @RBAC(Role.admin)
   patchMovie(@Param('id', ParseIntPipe) id: string, @Body() body: UpdateMovieDto) {
     return this.movieService.update(+id, body);
   }
 
   @Delete(':id')
+  @RBAC(Role.admin)
   deleteMovie(@Param('id', ParseIntPipe) id: string) {
     return this.movieService.deleteMovie(+id);
   }
