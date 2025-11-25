@@ -10,6 +10,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   // UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,7 +22,7 @@ import { Public } from '../auth/decorator/public.decorator';
 import { RBAC } from 'src/auth/decorator/rbac.decorator';
 import { Role } from 'src/user/entity/user.entity';
 import { GetMoviesDto } from './dto/get-movies.dto';
-import { CacheInterceptor } from 'src/common/interceptor/cache.interceptor';
+import { TransactionInterceptor } from 'src/common/interceptor/transaction.interceptor';
 
 @Controller('movie')
 @UseInterceptors(ClassSerializerInterceptor) // 응답 데이터를 변환하는 인터셉터
@@ -30,7 +31,6 @@ export class MovieController {
 
   @Get()
   @Public()
-  @UseInterceptors(CacheInterceptor)
   getMovies(@Query() dto: GetMoviesDto) {
     /// title 쿼리의 타입이 string 타입인지?
     return this.movieService.findAll(dto);
@@ -54,9 +54,10 @@ export class MovieController {
 
   @Post()
   @RBAC(Role.admin)
+  @UseInterceptors(TransactionInterceptor)
   // @UseGuards(AuthGuard)
-  postMovie(@Body() body: CreateMovieDto) {
-    return this.movieService.create(body);
+  postMovie(@Body() body: CreateMovieDto, @Req() req) {
+    return this.movieService.create(body, req.queryRunner);
   }
 
   @Patch(':id')
